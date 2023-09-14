@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using System.Net.Http;
+using System.Text.Json;
 using UserMS.DTO;
 
 namespace UserMS.Client
@@ -32,16 +33,26 @@ namespace UserMS.Client
 
         public async Task<UserDTO> GetUserByID(long id)
         {
+            UserDTO userByIdDto = new UserDTO();
+
             if (configurationOK)
             {
                 string requestAddress = $"{serviceAddress}/{apiBaseAddress}/{id}";
 
-                var userByIdJson = await httpClient.GetAsync(requestAddress);
+                HttpResponseMessage userServiceResponse = await httpClient.GetAsync(requestAddress);
 
-                //TODO: Create UserDTO object from JSON
+                if (userServiceResponse != null)
+                {
+                    if (userServiceResponse.IsSuccessStatusCode)
+                    {
+                        string userByIdJson = await userServiceResponse.Content.ReadAsStringAsync();
+
+                        userByIdDto = JsonSerializer.Deserialize<UserDTO>(userByIdJson);                     
+                    }
+                }
             }
 
-            return null;
+            return userByIdDto;
         }
     }
 }
