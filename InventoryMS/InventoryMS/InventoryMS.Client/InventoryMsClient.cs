@@ -13,7 +13,7 @@ namespace InventoryMS.Client
         {
             IConfiguration AppConfiguration =
                 new ConfigurationBuilder()
-                .AddJsonFile("clientsettings.json").Build();
+                .AddJsonFile("inventory-client-settings.json").Build();
 
             serviceAddress = AppConfiguration.GetSection("InventoryServiceAddress").Value;
 

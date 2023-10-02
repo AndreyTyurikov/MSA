@@ -1,5 +1,6 @@
 ﻿using InvoiceMS.Contracts;
 using UserMS.Client;
+using InventoryMS.Client;
 using UserMS.DTO;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,9 +30,11 @@ namespace InvoiceMS.Host.Controllers
         [HttpPost]
         public async void Post([FromBody] AddInvoiceDTO invoiceToAdd)
         {
-            IUserMsClient userMsClient = new UserMsClient();
+            //IUserMsClient userMsClient = new UserMsClient();
+            //var userByID = await userMsClient.GetUserByID(invoiceToAdd.UserId);
 
-            var userByID = await userMsClient.GetUserByID(invoiceToAdd.UserId);
+            var allInventory = InventoryMsClient.Client.GetAll();
+
         }
 
         // PUT api/<InvoiceController>/5
