@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceMS.Contracts
 {
-    public class InvoiceEntry
+    public class AddInvoiceEntry
     {
         //ID of goods
         public long InventoryId { get; set; }

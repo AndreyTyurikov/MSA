@@ -1,8 +1,6 @@
 ﻿using InvoiceMS.Contracts;
-using UserMS.Client;
-using InventoryMS.Client;
-using UserMS.DTO;
 using Microsoft.AspNetCore.Mvc;
+using InvoiceMS.Infrastructure.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -12,16 +10,23 @@ namespace InvoiceMS.Host.Controllers
     [ApiController]
     public class InvoiceController : ControllerBase
     {
+        //private readonly IInvoiceService _invoiceService;
+
+        //public InvoiceController(IInvoiceService invoiceService)
+        //{
+        //    _invoiceService = invoiceService;
+        //}
+
         // GET: api/<InvoiceController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        [HttpGet("byUser/{id}")]
+        public IEnumerable<string> GetByUserId(long id)
         {
             return new string[] { "value1", "value2" };
         }
 
         // GET api/<InvoiceController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public string Get(long id)
         {
             return "value";
         }
@@ -30,11 +35,6 @@ namespace InvoiceMS.Host.Controllers
         [HttpPost]
         public async void Post([FromBody] AddInvoiceDTO invoiceToAdd)
         {
-            //IUserMsClient userMsClient = new UserMsClient();
-            //var userByID = await userMsClient.GetUserByID(invoiceToAdd.UserId);
-
-            var allInventory = InventoryMsClient.Client.GetAll();
-
         }
 
         // PUT api/<InvoiceController>/5

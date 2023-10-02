@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\InvoiceMS.Contracts\InvoiceMS.Contracts.csproj" />
+    <ProjectReference Include="..\InvoiceMS.Infrastructure\InvoiceMS.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
