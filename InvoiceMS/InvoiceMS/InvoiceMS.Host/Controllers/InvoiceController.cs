@@ -2,51 +2,54 @@
 using Microsoft.AspNetCore.Mvc;
 using InvoiceMS.Infrastructure.Services;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace InvoiceMS.Host.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class InvoiceController : ControllerBase
     {
-        //private readonly IInvoiceService _invoiceService;
+        private readonly IInvoiceService _invoiceService;
 
-        //public InvoiceController(IInvoiceService invoiceService)
-        //{
-        //    _invoiceService = invoiceService;
-        //}
+        public InvoiceController(IInvoiceService invoiceService)
+        {
+            _invoiceService = invoiceService;
+        }
 
         // GET: api/<InvoiceController>
         [HttpGet("byUser/{id}")]
-        public IEnumerable<string> GetByUserId(long id)
+        public async Task<IEnumerable<InvoiceDTO>> GetByUserId(long id)
         {
-            return new string[] { "value1", "value2" };
+            List<InvoiceDTO> invoicesByUser = await _invoiceService.GetInvoicesByUser(id);
+
+            return invoicesByUser;
         }
 
         // GET api/<InvoiceController>/5
         [HttpGet("{id}")]
-        public string Get(long id)
+        public async Task<InvoiceDTO> Get(long id)
         {
-            return "value";
+            InvoiceDTO invoiceById = await _invoiceService.GetInvoiceById(id);
+
+            return invoiceById;
         }
 
         // POST api/<InvoiceController>
         [HttpPost]
-        public async void Post([FromBody] AddInvoiceDTO invoiceToAdd)
+        public async Task<InvoiceDTO> Post([FromBody] AddInvoiceDTO invoiceToAdd)
         {
-        }
+            InvoiceDTO addedInvoice = await _invoiceService.AddInvoice(invoiceToAdd);
 
-        // PUT api/<InvoiceController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
+            return addedInvoice;
         }
 
         // DELETE api/<InvoiceController>/5
+        //TODO: Удалять только неоплаченные инвойсы
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public async Task<bool> Delete(int id)
         {
+            bool isInvoiceDeleted = await _invoiceService.DeleteInvoiceById(id);
+
+            return isInvoiceDeleted;
         }
     }
 }
