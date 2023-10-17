@@ -5,6 +5,8 @@ using InventoryMS.Contracts;
 using InventoryMS.Client;
 using System.Linq;
 using InvoiceMS.Infrastructure.Domain.Entities;
+using InvoiceMS.Infrastructure.DataLayer;
+using Mapster;
 
 namespace InvoiceMS.Infrastructure.Services
 {
@@ -12,25 +14,25 @@ namespace InvoiceMS.Infrastructure.Services
     {
         private readonly IUserMsClient _userMsClient;
         private readonly IInventoryMSClient _inventoryMSClient;
+        private readonly IInvoiceDataLayer _invoiceDataLayer;
 
-        public InvoiceService(IUserMsClient userMsClient) { 
+        public InvoiceService(IUserMsClient userMsClient, IInvoiceDataLayer invoiceDataLayer) { 
             _userMsClient = userMsClient;
             _inventoryMSClient = InventoryMsClient.Client;
+            _invoiceDataLayer = invoiceDataLayer;
         }
 
-        public async Task<InvoiceDTO> AddInvoice(AddInvoiceDTO invoiceToAdd)
-        {/*
-          * #4 Make invoice
-          * #5 Save invoice
-          * #6 Return invoice DTO
-          */
-            UserDTO userByID = await _userMsClient.GetUserByID(invoiceToAdd.UserId);
+        public async Task<InvoiceDTO> AddInvoice(AddInvoiceDTO addInvoiceDto)
+        {
+            InvoiceDTO addedInvoiceDTO = new InvoiceDTO();
+            
+            UserDTO userByID = await _userMsClient.GetUserByID(addInvoiceDto.UserId);
 
             //Check whether user exists and invoice has items
-            if (userByID.Id > 0 && invoiceToAdd.InvoiceEntries.Length > 0) 
+            if (userByID.Id > 0 && addInvoiceDto.InvoiceEntries.Length > 0) 
             {
                 List<InventoryItemDTO> inventoryItems = 
-                    await _inventoryMSClient.SearchByIdsAsync(invoiceToAdd.InvoiceEntries.Select(e => e.InventoryId).ToArray());
+                    await _inventoryMSClient.SearchByIdsAsync(addInvoiceDto.InvoiceEntries.Select(e => e.InventoryId).ToArray());
 
                 if (inventoryItems.Count > 0)
                 {
@@ -40,7 +42,7 @@ namespace InvoiceMS.Infrastructure.Services
                     //Storage for future invoice items
                     List<InvoiceEntry> newInvoiceEntries = new List<InvoiceEntry>();
 
-                    foreach (AddInvoiceEntry invoiceEntry in invoiceToAdd.InvoiceEntries)
+                    foreach (AddInvoiceEntry invoiceEntry in addInvoiceDto.InvoiceEntries)
                     {
                         var inventoryItemToAdd = inventoryItemsLookup[invoiceEntry.InventoryId].FirstOrDefault();
 
@@ -57,13 +59,23 @@ namespace InvoiceMS.Infrastructure.Services
 
                     //We do have items for new invoice
                     if (newInvoiceEntries.Count > 0)
-                    { 
-                        //TODO: Save invoice to DB
+                    {
+                        Invoice newInvoice = new Invoice {
+                            InvoiceNumber = $"{addInvoiceDto.UserId}-{DateTime.Now.ToString("yyyy-MM-dd-HH-mm")}",
+                            UserId = addInvoiceDto.UserId,
+                            IssueDate = DateTime.Now,
+                            //TODO: Take invoice exp. period from app settings
+                            ExpirationDate = DateTime.Now.AddDays(3)
+                        };
+
+                        Invoice addedInvoice = await _invoiceDataLayer.AddInvoice(newInvoice, newInvoiceEntries);
+
+                        addedInvoiceDTO = addedInvoice.Adapt<InvoiceDTO>();
                     }
                 }
             }
 
-            return new InvoiceDTO();
+            return addedInvoiceDTO;
         }
 
         public Task<bool> DeleteInvoiceById(int id)
@@ -71,9 +83,11 @@ namespace InvoiceMS.Infrastructure.Services
             throw new NotImplementedException();
         }
 
-        public Task<InvoiceDTO> GetInvoiceById(long id)
+        public async Task<InvoiceDTO> GetInvoiceById(long id)
         {
-            throw new NotImplementedException();
+            Invoice invoiceById = await _invoiceDataLayer.GetInvoiceById(id);
+
+            return invoiceById.Adapt<InvoiceDTO>();
         }
 
         public Task<List<InvoiceDTO>> GetInvoicesByUser(long id)

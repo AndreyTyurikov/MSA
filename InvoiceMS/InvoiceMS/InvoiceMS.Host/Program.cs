@@ -1,4 +1,5 @@
 using InventoryMS.Client;
+using InvoiceMS.Infrastructure.DataLayer;
 using InvoiceMS.Infrastructure.Services;
 using UserMS.Client;
 
@@ -13,6 +14,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IUserMsClient, UserMsClient>();
 builder.Services.AddScoped<IInvoiceService, InvoiceService>();
+builder.Services.AddTransient<IInvoiceDataLayer, InvoiceDataLayer>();
 
 var app = builder.Build();
 
