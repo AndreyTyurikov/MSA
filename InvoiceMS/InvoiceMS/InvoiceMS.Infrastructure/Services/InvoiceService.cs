@@ -7,6 +7,7 @@ using System.Linq;
 using InvoiceMS.Infrastructure.Domain.Entities;
 using InvoiceMS.Infrastructure.DataLayer;
 using Mapster;
+using System.Collections.Generic;
 
 namespace InvoiceMS.Infrastructure.Services
 {
@@ -78,9 +79,11 @@ namespace InvoiceMS.Infrastructure.Services
             return addedInvoiceDTO;
         }
 
-        public Task<bool> DeleteInvoiceById(int id)
+        public async Task<bool> DeleteInvoiceById(int id)
         {
-            throw new NotImplementedException();
+            bool isInvoiceDeleted = await _invoiceDataLayer.DeleteInvoiceById(id);
+
+            return isInvoiceDeleted;
         }
 
         public async Task<InvoiceDTO> GetInvoiceById(long id)
@@ -90,9 +93,11 @@ namespace InvoiceMS.Infrastructure.Services
             return invoiceById.Adapt<InvoiceDTO>();
         }
 
-        public Task<List<InvoiceDTO>> GetInvoicesByUser(long id)
+        public async Task<List<InvoiceDTO>> GetInvoicesByUser(long id)
         {
-            throw new NotImplementedException();
+            List<Invoice> invoicesByUserId = await _invoiceDataLayer.GetInvoicesByUserId(id);
+
+            return invoicesByUserId.Adapt<List<InvoiceDTO>>();
         }
     }
 }

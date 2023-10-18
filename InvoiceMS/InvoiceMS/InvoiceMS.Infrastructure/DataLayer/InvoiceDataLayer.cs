@@ -2,11 +2,6 @@
 using InvoiceMS.Infrastructure.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InvoiceMS.Infrastructure.DataLayer
 {
@@ -53,19 +48,66 @@ namespace InvoiceMS.Infrastructure.DataLayer
             }
         }
 
+        public async Task<bool> DeleteInvoiceById(int id)
+        {
+            bool isInvoiceDeleted = false;  
+
+            using (InvoiceMsDbContext dbContext = new InvoiceMsDbContext())
+            {
+                Invoice? invoiceById = dbContext.Invoices.Where(i => i.InvoiceId == id).Include(i => i.InvoiceEntries).FirstOrDefault();
+
+                if (invoiceById != null)
+                {
+                    IDbContextTransaction transaction = dbContext.Database.BeginTransaction();
+
+                    try
+                    {
+                        if(invoiceById.InvoiceEntries.Count > 0) {
+                            dbContext.InvoiceEntries.RemoveRange(invoiceById.InvoiceEntries);                            
+                        }
+                       
+                        dbContext.Invoices.Remove(invoiceById);
+                        await dbContext.SaveChangesAsync();
+
+                        transaction.Commit();
+
+                        isInvoiceDeleted = true;
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+
+                        throw;
+                    }
+                }
+
+                return isInvoiceDeleted;
+            }
+        }
+
         public async Task<Invoice> GetInvoiceById(long id)
         {
             using (InvoiceMsDbContext dbContext = new InvoiceMsDbContext()) {
 
                 Invoice? invoiceById = await dbContext.Invoices.Where(i => i.InvoiceId == id).Include(i => i.InvoiceEntries).FirstOrDefaultAsync();
 
-                //if (invoiceById != null)
-                //{
-                //    invoiceById.InvoiceEntries = await dbContext.InvoiceEntries.Where(i => i.InvoiceId == id).ToListAsync();    
-                //}
-
                 return invoiceById != null ? invoiceById : new Invoice();
 
+            }
+        }
+
+        public async Task<List<Invoice>> GetInvoicesByUserId(long id)
+        {
+            using (InvoiceMsDbContext dbContext = new InvoiceMsDbContext())
+            {
+                List<Invoice> invoicesByUserID = new List<Invoice>();
+
+                if (dbContext.Invoices.Any(i => i.UserId == id))
+                {
+                    invoicesByUserID = await dbContext.Invoices.Where(i => i.UserId == id).Include(i => i.InvoiceEntries).ToListAsync();
+                }
+
+                return invoicesByUserID;
             }
         }
     }

@@ -10,6 +10,8 @@ namespace InvoiceMS.Infrastructure.DataLayer
     public interface IInvoiceDataLayer
     {
         Task<Invoice> AddInvoice(Invoice newInvoice, List<InvoiceEntry> newInvoiceEntries);
+        Task<bool> DeleteInvoiceById(int id);
         Task<Invoice> GetInvoiceById(long id);
+        Task<List<Invoice>> GetInvoicesByUserId(long id);
     }
 }
