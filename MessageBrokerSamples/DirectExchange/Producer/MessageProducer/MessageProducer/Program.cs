@@ -2,7 +2,6 @@
 using RabbitMQ.Client;
 
 string firstMessageQueueName = "first.message.queue";
-string secondMessageQueueName = "second.message.queue";
 
 ConnectionFactory rabbitConnectionFactory = new ConnectionFactory { HostName = "localhost" };
 
@@ -11,50 +10,32 @@ using (IConnection rabbitConnection = rabbitConnectionFactory.CreateConnection()
     using (IModel channel = rabbitConnection.CreateModel())
     {
         #region messageToFirstQueue
-        //Эта очередь будет присоединена к обменнику по-умолчанию (Default Exchange)
+
         channel.QueueDeclare(
             queue: firstMessageQueueName,
             durable: true,
             exclusive: false,
             autoDelete: false,
-            arguments: null  //Без. доп. опций. Все настройки очереди по-умолчанию
+            arguments: null 
             );
 
-        string firstTestMessage = "Message #1. Hello buddy. What's up";
+        long messageNumber = 1;
 
-        //AMPQ принимает только двоичные сообщения. 
-        byte[] binaryMessageBody = Encoding.Unicode.GetBytes(firstTestMessage);
+        while (messageNumber < 20000)
+        {
+            string message = $"Message #{messageNumber++}. For queue: first.message.queue";
 
-        //Отправляем сообщение
-        channel.BasicPublish(
-            exchange: string.Empty, // <--- Будет использован обменник по-умолчанию (AMQP default)
-            routingKey: firstMessageQueueName, // <-- В режиме Direct Exchange чтобы сообщение попало в нужную очередь, 
-                                               // его routingKey должен быть равен имени самой очереди
-            mandatory: false,                  // В случае проблем с дооставкой - не возвращать отправителю. Уничтожать (drop). 
-            basicProperties: null,
-            body: binaryMessageBody
-            );
-        #endregion
+            byte[] binaryMessageBody = Encoding.Unicode.GetBytes(message);
 
-        #region messageToSecondQueue
+            channel.BasicPublish(
+                exchange: string.Empty,
+                routingKey: firstMessageQueueName,
+                mandatory: false,
+                basicProperties: null,
+                body: binaryMessageBody
+                );
+        }
 
-        channel.QueueDeclare(
-            queue: secondMessageQueueName,
-            durable: true,
-            exclusive: false,
-            autoDelete: false,
-            arguments: null
-            );
-
-        string secondTestMessage = "Message #1 for Queue #2. Hello buddy. What's up";
-
-        channel.BasicPublish(
-            exchange: string.Empty, 
-            routingKey: secondMessageQueueName,                                                
-            mandatory: false,
-            basicProperties: null,
-            body: Encoding.Unicode.GetBytes(secondTestMessage)
-            );
         #endregion
     }
 }
