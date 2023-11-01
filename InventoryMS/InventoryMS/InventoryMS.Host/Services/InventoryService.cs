@@ -9,10 +9,12 @@ namespace InventoryMS.Host.Services
     public class InventoryService : IInventoryService
     {
         private readonly IInventoryDataLayer _inventoryDataLayer;
+        private readonly IEventService _eventService;
 
-        public InventoryService(IInventoryDataLayer inventoryDataLayer)
+        public InventoryService(IInventoryDataLayer inventoryDataLayer, IEventService eventService)
         {
             _inventoryDataLayer = inventoryDataLayer;
+            _eventService = eventService;
         }
 
         public async Task<InventoryItemDTO> AddInventoryItem(AddInventoryItemDTO inventoryItemToAdd)

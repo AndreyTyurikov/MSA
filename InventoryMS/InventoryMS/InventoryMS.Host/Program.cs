@@ -1,4 +1,5 @@
 using InventoryMS.Host.Domain.DataLayer;
+using InventoryMS.Host.MessageBroker;
 using InventoryMS.Host.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,9 +16,13 @@ builder.Services.AddSwaggerGen();
 
 //Scoped services
 builder.Services.AddScoped<IInventoryService, InventoryService>();
+builder.Services.AddScoped<IMessageBusProducer, Producer>();
 
 //Transient
 builder.Services.AddTransient<IInventoryDataLayer, InventoryDataLayer>();
+
+//Singleton
+builder.Services.AddSingleton<IEventService, EventService>();
 
 var app = builder.Build();
 
