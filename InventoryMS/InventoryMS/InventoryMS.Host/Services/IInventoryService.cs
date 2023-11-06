@@ -7,5 +7,6 @@ namespace InventoryMS.Host.Services
         Task<InventoryItemDTO> AddInventoryItem(AddInventoryItemDTO inventoryItemToAdd);
         Task<List<InventoryItemDTO>> GetAll();
         Task<List<InventoryItemDTO>> GetByIds(long[] ids);
+        Task<bool> UpdateInventoryItem(EditInventoryItemDTO editInventoryItemDTO);
     }
 }

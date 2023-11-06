@@ -31,6 +31,12 @@ namespace InventoryMS.Host.Controllers
             return await _inventoryService.AddInventoryItem(inventoryItemToAdd);
         }
 
+        [HttpPut]
+        public async Task<bool> Edit([FromBody] EditInventoryItemDTO editInventoryItemDTO)
+        {
+            return await _inventoryService.UpdateInventoryItem(editInventoryItemDTO);
+        }
+
         [HttpPost("SearchByIds")]
         public async Task<List<InventoryItemDTO>> SearchByIdsAsync([FromBody] long[] ids)
         {

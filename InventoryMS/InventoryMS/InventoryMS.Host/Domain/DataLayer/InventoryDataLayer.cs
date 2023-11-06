@@ -27,6 +27,16 @@ namespace InventoryMS.Host.Domain.DataLayer
             }
         }
 
+        public async Task<InventoryItem> ById(long id)
+        {
+            using (InventoryMsDbContext dbContext = new InventoryMsDbContext())
+            {
+                InventoryItem? inventoryItemById = await dbContext.InventoryItems.FirstOrDefaultAsync(i => i.Id == id);
+
+                return inventoryItemById != null ? inventoryItemById : new InventoryItem();
+            }
+        }
+
         public async Task<List<InventoryItem>> ByIds(long[] ids)
         {
             using (InventoryMsDbContext dbContext = new InventoryMsDbContext())
@@ -39,6 +49,27 @@ namespace InventoryMS.Host.Domain.DataLayer
                     itemsByIds = await searchResults.ToListAsync();
 
                 return itemsByIds;
+            }
+        }
+
+        public async Task<bool> Update(InventoryItem updatedInventoryItem)
+        {
+            using (InventoryMsDbContext dbContext = new InventoryMsDbContext())
+            {
+                int rowsUpdates = 0;
+
+                InventoryItem? inventoryItemToUpdate = await dbContext.InventoryItems.FirstOrDefaultAsync(i => i.Id == updatedInventoryItem.Id);
+
+                if (inventoryItemToUpdate != null)
+                {
+                    //TODO: Consider auto copy using reflection
+                    inventoryItemToUpdate.Name = updatedInventoryItem.Name;
+                    inventoryItemToUpdate.Price = updatedInventoryItem.Price;
+
+                    rowsUpdates = await dbContext.SaveChangesAsync();
+                }
+
+                return rowsUpdates > 0;
             }
         }
     }

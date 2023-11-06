@@ -1,7 +1,10 @@
-﻿using InventoryMS.Client;
+﻿using InventoryMS.Contracts;
+using InventoryMS.Host.Domain.Models;
 
-var inventoryServiceClient = InventoryMsClient.Client;
+EditInventoryItemDTO dto = new EditInventoryItemDTO() { Id = 1, Name = "Updated Name", Price = 200 };
 
-var inventoryItems = await inventoryServiceClient.SearchByIdsAsync(new[] { 1L, 2L, 3L });
+InventoryItem itemToUpdate = new InventoryItem();
 
-var a = 1;
+itemToUpdate.UpdateFromEditInventoryItemDto(dto);
+
+var a = 10;

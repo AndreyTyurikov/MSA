@@ -39,5 +39,25 @@ namespace InventoryMS.Host.Services
 
             return inventoryItemsByIds.Adapt<List<InventoryItemDTO>>();
         }
+
+        public async Task<bool> UpdateInventoryItem(EditInventoryItemDTO editInventoryItemDTO)
+        {
+            if (editInventoryItemDTO.IsUpdated())
+            {
+                if (editInventoryItemDTO.Id > 0)
+                {
+                    InventoryItem inventoryItemByID = await _inventoryDataLayer.ById(editInventoryItemDTO.Id);
+
+                    if (inventoryItemByID.Id > 0)
+                    {
+                        inventoryItemByID.UpdateFromEditInventoryItemDto(editInventoryItemDTO);
+
+                        return await _inventoryDataLayer.Update(inventoryItemByID);
+                    }
+                }
+            }
+
+            return false;
+        }
     }
 }
