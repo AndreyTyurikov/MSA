@@ -42,7 +42,7 @@ namespace InventoryMS.Host.Services
 
         public async Task<bool> UpdateInventoryItem(EditInventoryItemDTO editInventoryItemDTO)
         {
-            if (editInventoryItemDTO.IsUpdated())
+            if (editInventoryItemDTO.ContainsUpdates())
             {
                 if (editInventoryItemDTO.Id > 0)
                 {
@@ -50,6 +50,9 @@ namespace InventoryMS.Host.Services
 
                     if (inventoryItemByID.Id > 0)
                     {
+                        //Note: we don't await this Task. "Fire and forget" mode
+                        _eventService.ProcessAndPublishInventoryItemUpdates(inventoryItemByID, editInventoryItemDTO);
+
                         inventoryItemByID.UpdateFromEditInventoryItemDto(editInventoryItemDTO);
 
                         return await _inventoryDataLayer.Update(inventoryItemByID);

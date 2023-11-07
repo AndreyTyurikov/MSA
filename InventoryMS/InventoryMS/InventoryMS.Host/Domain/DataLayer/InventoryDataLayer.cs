@@ -58,16 +58,9 @@ namespace InventoryMS.Host.Domain.DataLayer
             {
                 int rowsUpdates = 0;
 
-                InventoryItem? inventoryItemToUpdate = await dbContext.InventoryItems.FirstOrDefaultAsync(i => i.Id == updatedInventoryItem.Id);
+                dbContext.InventoryItems.Update(updatedInventoryItem);
 
-                if (inventoryItemToUpdate != null)
-                {
-                    //TODO: Consider auto copy using reflection
-                    inventoryItemToUpdate.Name = updatedInventoryItem.Name;
-                    inventoryItemToUpdate.Price = updatedInventoryItem.Price;
-
-                    rowsUpdates = await dbContext.SaveChangesAsync();
-                }
+                rowsUpdates = await dbContext.SaveChangesAsync();
 
                 return rowsUpdates > 0;
             }

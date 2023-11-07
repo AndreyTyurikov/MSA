@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Reflection;
+using System.Xml.Linq;
 
 namespace InventoryMS.Contracts
 {
@@ -8,23 +10,32 @@ namespace InventoryMS.Contracts
         public long Id { get; set; }
         public string? Name { get; set; }
         public decimal? Price { get; set; }
+        public int? Stock { get; set; }
 
-        public bool IsUpdated()        
-        {           
-            foreach (PropertyInfo pi in GetPropertiesForUpdate())
-            {
-                if (pi.GetValue(this, null) != null)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+        public bool ContainsUpdates()        
+        {
+            return GetPropertiesForUpdate().Count > 0;
         }
 
         public List<PropertyInfo> GetPropertiesForUpdate()
         {
-            return this.GetType().GetProperties().Where(p => p.Name != "Id").ToList();
+            //All object properties without Key property
+            List<PropertyInfo> valueProperties = this.GetType().GetProperties().Where(p => p.Name != "Id").ToList();
+
+            List<PropertyInfo> propertiesForUpdate = new List<PropertyInfo>();       
+
+            if (valueProperties.Count > 0)
+            {
+                foreach (PropertyInfo property in valueProperties)
+                {
+                    if (property.GetValue(this, null) != null)
+                    {
+                        propertiesForUpdate.Add(property);
+                    }
+                }
+            }
+
+            return propertiesForUpdate;
         }
     }
 }

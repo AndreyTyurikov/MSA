@@ -17,12 +17,10 @@ builder.Services.AddSwaggerGen();
 //Scoped services
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 builder.Services.AddScoped<IMessageBusProducer, Producer>();
+builder.Services.AddScoped<IEventService, EventService>();
 
 //Transient
 builder.Services.AddTransient<IInventoryDataLayer, InventoryDataLayer>();
-
-//Singleton
-builder.Services.AddSingleton<IEventService, EventService>();
 
 var app = builder.Build();
 
