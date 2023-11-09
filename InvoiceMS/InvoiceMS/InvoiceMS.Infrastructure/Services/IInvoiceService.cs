@@ -1,4 +1,5 @@
 ﻿using InvoiceMS.Contracts;
+using InvoiceMS.Infrastructure.EventProcessors;
 
 namespace InvoiceMS.Infrastructure.Services
 {

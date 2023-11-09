@@ -6,6 +6,6 @@
 
         public EventType eventType { get; set; }
 
-        public object eventPayload { get; set; }
+        public string eventPayload { get; set; }
     }
 }

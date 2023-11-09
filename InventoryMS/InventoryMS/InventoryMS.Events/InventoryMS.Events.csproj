@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>PD21.InventoryMs.Events</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>AndriiTiurikov</Authors>
     <Company>PD21</Company>
     <Product>MSA</Product>

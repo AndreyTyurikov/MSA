@@ -8,10 +8,11 @@ using InvoiceMS.Infrastructure.Domain.Entities;
 using InvoiceMS.Infrastructure.DataLayer;
 using Mapster;
 using System.Collections.Generic;
+using InvoiceMS.Infrastructure.EventProcessors;
 
 namespace InvoiceMS.Infrastructure.Services
 {
-    public class InvoiceService : IInvoiceService
+    public class InvoiceService : IInvoiceService, IInventoryUpdatesNotificationsProcessor
     {
         private readonly IUserMsClient _userMsClient;
         private readonly IInventoryMSClient _inventoryMSClient;
@@ -98,6 +99,16 @@ namespace InvoiceMS.Infrastructure.Services
             List<Invoice> invoicesByUserId = await _invoiceDataLayer.GetInvoicesByUserId(id);
 
             return invoicesByUserId.Adapt<List<InvoiceDTO>>();
+        }
+
+        public Task ProcessInventoryItemNameUpdatedNotification(InventoryItemNameUpdatedNotification updateNotification)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task ProcessInventoryItemPriceUpdatedNotification(InventoryItemPriceUpdatedNotification updateNotification)
+        {
+            throw new NotImplementedException();
         }
     }
 }

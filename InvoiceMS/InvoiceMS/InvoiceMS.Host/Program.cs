@@ -1,5 +1,7 @@
 using InventoryMS.Client;
+using InvoiceMS.Infrastructure;
 using InvoiceMS.Infrastructure.DataLayer;
+using InvoiceMS.Infrastructure.EventProcessors;
 using InvoiceMS.Infrastructure.MessageBroker;
 using InvoiceMS.Infrastructure.Services;
 using UserMS.Client;
@@ -13,13 +15,19 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IUserMsClient, UserMsClient>();
+//Scoped services
 builder.Services.AddScoped<IInvoiceService, InvoiceService>();
+
+//Transient services
 builder.Services.AddTransient<IInvoiceDataLayer, InvoiceDataLayer>();
+builder.Services.AddTransient<IInvetoryServiceEventsProcessor, InvetoryServiceEventsProcessor>();
+builder.Services.AddTransient<IInventoryUpdatesNotificationsProcessor, InvoiceService>();
 
-//Hosted service
+//Singleton services
+builder.Services.AddSingleton<IUserMsClient, UserMsClient>();
+
+//Hosted services
 builder.Services.AddHostedService<InventoryServiceEventsConsumer>();
-
 
 var app = builder.Build();
 
