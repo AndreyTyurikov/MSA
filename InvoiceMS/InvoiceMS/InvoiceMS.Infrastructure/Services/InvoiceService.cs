@@ -12,7 +12,7 @@ using InvoiceMS.Infrastructure.EventProcessors;
 
 namespace InvoiceMS.Infrastructure.Services
 {
-    public class InvoiceService : IInvoiceService, IInventoryUpdatesNotificationsProcessor
+    public class InvoiceService : IInvoiceService, IInventoryUpdateNotificationsProcessor
     {
         private readonly IUserMsClient _userMsClient;
         private readonly IInventoryMSClient _inventoryMSClient;
@@ -101,14 +101,35 @@ namespace InvoiceMS.Infrastructure.Services
             return invoicesByUserId.Adapt<List<InvoiceDTO>>();
         }
 
-        public Task ProcessInventoryItemNameUpdatedNotification(InventoryItemNameUpdatedNotification updateNotification)
+        public async Task ProcessInventoryItemNameUpdatedNotification(InventoryItemNameUpdatedNotification updateNotification)
         {
-            throw new NotImplementedException();
+            //All invoices holding specific InventoryItem udpated.
+            List<InvoiceEntry> invoiceEntriesByInventoryItemID = 
+                await _invoiceDataLayer.GetInvoiceEntriesByInventoryItemID(updateNotification.ItemId);
+
+            foreach (InvoiceEntry invoiceEntry in invoiceEntriesByInventoryItemID)
+            {
+                invoiceEntry.Name = updateNotification.NewName;
+            }
+
+            await _invoiceDataLayer.SaveUpdatedInvoiceEntries(invoiceEntriesByInventoryItemID);
+
+            return;
         }
 
-        public Task ProcessInventoryItemPriceUpdatedNotification(InventoryItemPriceUpdatedNotification updateNotification)
+        public async Task ProcessInventoryItemPriceUpdatedNotification(InventoryItemPriceUpdatedNotification updateNotification)
         {
-            throw new NotImplementedException();
+            List<InvoiceEntry> invoiceEntriesByInventoryItemID =
+                await _invoiceDataLayer.GetInvoiceEntriesByInventoryItemID(updateNotification.ItemId);
+
+            foreach (InvoiceEntry invoiceEntry in invoiceEntriesByInventoryItemID)
+            {
+                invoiceEntry.Price = updateNotification.NewPrice;
+            }
+
+            await _invoiceDataLayer.SaveUpdatedInvoiceEntries(invoiceEntriesByInventoryItemID);
+
+            return;
         }
     }
 }

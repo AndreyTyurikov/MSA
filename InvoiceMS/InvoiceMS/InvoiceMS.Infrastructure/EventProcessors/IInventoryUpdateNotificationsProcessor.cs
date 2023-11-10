@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace InvoiceMS.Infrastructure.EventProcessors
 {
-    public interface IInventoryUpdatesNotificationsProcessor
+    public interface IInventoryUpdateNotificationsProcessor
     {
         Task ProcessInventoryItemNameUpdatedNotification(InventoryItemNameUpdatedNotification updateNotification);
         Task ProcessInventoryItemPriceUpdatedNotification(InventoryItemPriceUpdatedNotification updateNotification);

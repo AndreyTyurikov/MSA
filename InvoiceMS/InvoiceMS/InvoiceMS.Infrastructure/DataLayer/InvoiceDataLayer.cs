@@ -2,6 +2,7 @@
 using InvoiceMS.Infrastructure.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using System.Collections.Generic;
 
 namespace InvoiceMS.Infrastructure.DataLayer
 {
@@ -96,6 +97,17 @@ namespace InvoiceMS.Infrastructure.DataLayer
             }
         }
 
+        public async Task<List<InvoiceEntry>> GetInvoiceEntriesByInventoryItemID(long itemId)
+        {
+            using (InvoiceMsDbContext dbContext = new InvoiceMsDbContext())
+            {
+                List<InvoiceEntry> invoiceEntriesByInventoryItemID
+                    = await dbContext.InvoiceEntries.Where(ie => ie.InventoryId == itemId).ToListAsync();
+
+                return invoiceEntriesByInventoryItemID;
+            }
+        }
+
         public async Task<List<Invoice>> GetInvoicesByUserId(long id)
         {
             using (InvoiceMsDbContext dbContext = new InvoiceMsDbContext())
@@ -108,6 +120,18 @@ namespace InvoiceMS.Infrastructure.DataLayer
                 }
 
                 return invoicesByUserID;
+            }
+        }
+
+        public Task SaveUpdatedInvoiceEntries(List<InvoiceEntry> invoiceEntriesByInventoryItemID)
+        {
+            using (InvoiceMsDbContext dbContext = new InvoiceMsDbContext())
+            {
+                dbContext.InvoiceEntries.UpdateRange(invoiceEntriesByInventoryItemID);
+
+                dbContext.SaveChanges();
+
+                return Task.CompletedTask;
             }
         }
     }

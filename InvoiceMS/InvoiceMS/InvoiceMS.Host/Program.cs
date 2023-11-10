@@ -21,7 +21,7 @@ builder.Services.AddScoped<IInvoiceService, InvoiceService>();
 //Transient services
 builder.Services.AddTransient<IInvoiceDataLayer, InvoiceDataLayer>();
 builder.Services.AddTransient<IInvetoryServiceEventsProcessor, InvetoryServiceEventsProcessor>();
-builder.Services.AddTransient<IInventoryUpdatesNotificationsProcessor, InvoiceService>();
+builder.Services.AddTransient<IInventoryUpdateNotificationsProcessor, InvoiceService>();
 
 //Singleton services
 builder.Services.AddSingleton<IUserMsClient, UserMsClient>();
