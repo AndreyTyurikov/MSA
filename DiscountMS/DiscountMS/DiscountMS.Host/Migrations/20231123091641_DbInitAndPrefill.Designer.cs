@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiscountMS.Host.Migrations
 {
     [DbContext(typeof(DiscountServiceDbContext))]
-    [Migration("20231116111449_DbInitAndDataSeed")]
-    partial class DbInitAndDataSeed
+    [Migration("20231123091641_DbInitAndPrefill")]
+    partial class DbInitAndPrefill
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -50,6 +50,40 @@ namespace DiscountMS.Host.Migrations
                         {
                             DiscountAmountTypeId = 2,
                             DiscountAmountTypeName = "Percentage"
+                        });
+                });
+
+            modelBuilder.Entity("DiscountMS.Host.Domain.Model.DiscountTerminationType", b =>
+                {
+                    b.Property<int>("DiscountTerminationTypeId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("DiscountTerminationTypeId"));
+
+                    b.Property<string>("DiscountTerminationTypeName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("DiscountTerminationTypeId");
+
+                    b.ToTable("DiscountTerminationTypes");
+
+                    b.HasData(
+                        new
+                        {
+                            DiscountTerminationTypeId = 1,
+                            DiscountTerminationTypeName = "SpecificDate"
+                        },
+                        new
+                        {
+                            DiscountTerminationTypeId = 2,
+                            DiscountTerminationTypeName = "OutOfStock"
+                        },
+                        new
+                        {
+                            DiscountTerminationTypeId = 3,
+                            DiscountTerminationTypeName = "Never"
                         });
                 });
 

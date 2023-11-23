@@ -23,4 +23,8 @@
     <Folder Include="Domain\DataLayer\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DiscountMS.Contracts\DiscountMS.Contracts.csproj" />
+  </ItemGroup>
+
 </Project>

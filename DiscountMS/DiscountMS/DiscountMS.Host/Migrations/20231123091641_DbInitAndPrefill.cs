@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiscountMS.Host.Migrations
 {
     /// <inheritdoc />
-    public partial class DbInitAndDataSeed : Migration
+    public partial class DbInitAndPrefill : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -24,6 +24,19 @@ namespace DiscountMS.Host.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DiscountAmountTypes", x => x.DiscountAmountTypeId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DiscountTerminationTypes",
+                columns: table => new
+                {
+                    DiscountTerminationTypeId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    DiscountTerminationTypeName = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DiscountTerminationTypes", x => x.DiscountTerminationTypeId);
                 });
 
             migrationBuilder.CreateTable(
@@ -49,6 +62,16 @@ namespace DiscountMS.Host.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "DiscountTerminationTypes",
+                columns: new[] { "DiscountTerminationTypeId", "DiscountTerminationTypeName" },
+                values: new object[,]
+                {
+                    { 1, "SpecificDate" },
+                    { 2, "OutOfStock" },
+                    { 3, "Never" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "DiscountTypes",
                 columns: new[] { "DiscountTypeId", "DiscountTypeName" },
                 values: new object[,]
@@ -66,6 +89,9 @@ namespace DiscountMS.Host.Migrations
         {
             migrationBuilder.DropTable(
                 name: "DiscountAmountTypes");
+
+            migrationBuilder.DropTable(
+                name: "DiscountTerminationTypes");
 
             migrationBuilder.DropTable(
                 name: "DiscountTypes");
