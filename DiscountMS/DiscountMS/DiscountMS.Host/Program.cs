@@ -1,3 +1,4 @@
+using DiscountMS.Host.Domain.DataLayer;
 using DiscountMS.Host.Domain.DbCtx;
 using DiscountMS.Host.Services;
 using Microsoft.EntityFrameworkCore;
@@ -5,7 +6,14 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-//builder.Services.AddScoped<IDiscountService, Discount>
+
+//Scoped (1 instance per 1 HTTP request)
+builder.Services.AddScoped<IDiscountService, DiscountService>();
+
+//Transient (1 instance per 1 new injection)
+builder.Services.AddTransient<IDiscountDataLayer, DiscountDataLayer>();
+
+//Singlentone (1 instance ever)
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -20,62 +20,35 @@ namespace DiscountMS.Host.Controllers
 
         // GET: api/<DiscountController>
         [HttpGet("personal")]
-        public PersonalDiscountDTO[] GetActivePersonalDiscounts()
+        public async Task<PersonalDiscountDTO[]> GetActivePersonalDiscounts()
         {
-            PersonalDiscountDTO[] tmpResults = { 
-                new PersonalDiscountDTO {
-                    DiscountID = 1,
-                    DiscountAmountType = DiscountAmountType.Percentage,
-                    DiscountAmount = 25.00M,
-                    DateFrom = DateTime.Today.AddHours(9),
-                    DateTo = null,
-                    TerminationType = DiscountTerminationType.Never,
-                    PersonalDiscountId = 1,
-                    UserID = 1,
-                }
-            };
+            PersonalDiscountDTO[] allActivePersonalDiscounts = await _discountService.GetActivePersonalDiscounts();
 
-            return tmpResults;
+            return allActivePersonalDiscounts;
         }
 
         [HttpGet("inventory_item")]
-        public InventoryItemDiscountDTO[] GetActiveInventoryItemDiscounts()
+        public async Task<InventoryItemDiscountDTO[]> GetActiveInventoryItemDiscounts()
         {
-            InventoryItemDiscountDTO[] tmpResults = {
+            InventoryItemDiscountDTO[] allActiveInventoryItemDiscounts = await _discountService.GetAllActiveInventoryItemDiscounts();
 
-                new InventoryItemDiscountDTO {
-                    DiscountID = 2,
-                    DiscountAmountType = DiscountAmountType.FixedAmount,
-                    DiscountAmount = 6000,
-                    DateFrom = DateTime.Today.AddHours(9),
-                    DateTo = DateTime.Today.AddHours(18),
-                    TerminationType = DiscountTerminationType.OutOfStock,
-                    InventoryItemDiscountId = 1,
-                    InventoryID = 1
-                }
-            };
-
-            return tmpResults;
+            return allActiveInventoryItemDiscounts;
         }
 
-
-        // GET api/<DiscountController>/5
-        //[HttpGet("{id}")]
-        //public DiscountDTO Get(int id)
-        //{
-        //    return null;
-        //}
-
         [HttpPost("personal")]
-        public DiscountDTO AddPersonalDiscount([FromBody] AddPersonalDiscountDTO discountToAdd)
+        public async Task<PersonalDiscountDTO> AddPersonalDiscount([FromBody] AddPersonalDiscountDTO discountToAdd)
         {
-            return null;
+            PersonalDiscountDTO addedPersonalDiscount = await _discountService.AddPersonalDiscount(discountToAdd);
+
+            return addedPersonalDiscount;
         }
 
         [HttpPost("inventory_item")]
-        public DiscountDTO AddInventoryItemDiscount([FromBody] AddInventoryItemDiscountDTO discountToAdd)
+        public async Task<InventoryItemDiscountDTO> AddInventoryItemDiscount([FromBody] AddInventoryItemDiscountDTO discountToAdd)
         {
-            return null;
+            InventoryItemDiscountDTO addedInventoryItemDiscount = await _discountService.AddInventoryItemDiscount(discountToAdd);
+
+            return addedInventoryItemDiscount;
         }
     }
 }

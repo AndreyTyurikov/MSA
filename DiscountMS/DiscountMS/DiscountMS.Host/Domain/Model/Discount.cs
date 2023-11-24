@@ -20,7 +20,7 @@ namespace DiscountMS.Host.Domain.Model
         public DateTime DateFrom { get; set; }
 
         //This field can be NULL
-        public DateTime DateTo { get; set; }
+        public DateTime? DateTo { get; set; }
 
         [Required]
         public DiscountTerminationType DiscountTerminationType { get; set; }
