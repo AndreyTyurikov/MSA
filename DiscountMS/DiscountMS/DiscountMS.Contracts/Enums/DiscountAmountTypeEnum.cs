@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DiscountMS.Contracts.Enums
 {
-    public enum DiscountAmountType
+    public enum DiscountAmountTypeEnum
     {
         FixedAmount = 1,
         Percentage = 2

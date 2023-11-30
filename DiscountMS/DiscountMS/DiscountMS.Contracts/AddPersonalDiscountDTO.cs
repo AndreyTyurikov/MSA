@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace DiscountMS.Contracts
 {
-    public class AddPersonalDiscountDTO
+    public class AddPersonalDiscountDTO : AddDiscountDTO
     {
+        public long UserID { get; set; }
     }
 }
