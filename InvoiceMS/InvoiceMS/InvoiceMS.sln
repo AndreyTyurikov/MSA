@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceMS.Host", "InvoiceMS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceMS.Contracts", "InvoiceMS.Contracts\InvoiceMS.Contracts.csproj", "{81008F76-79D4-42F5-87F6-9E67AE0C0CCE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InvoiceMS.Infrastructure", "InvoiceMS.Infrastructure\InvoiceMS.Infrastructure.csproj", "{5B1B2D77-05A5-489E-AEB0-CE4E5E0183D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InvoiceMS.Infrastructure", "InvoiceMS.Infrastructure\InvoiceMS.Infrastructure.csproj", "{5B1B2D77-05A5-489E-AEB0-CE4E5E0183D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

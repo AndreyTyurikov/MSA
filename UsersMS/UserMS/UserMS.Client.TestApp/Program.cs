@@ -1,7 +1,23 @@
 ﻿// See https://aka.ms/new-console-template for more information
 
-using UserMS.Client;
+using UserMS.Cache;
+using UserMS.DTO;
 
-IUserMsClient client = new UserMsClient();
+var userDTO = new UserDTO()
+{
+      Id = 1,
+      Name = "First Test User",
+      Email = "first@company.com",
+      BirthDate = DateTime.Now.AddYears(-30),
+      PhoneNumber = "+148834432123",
+      registeredAt = DateTime.Now
+};
 
-var userById = await client.GetUserByID(1);
+
+var cacheClient = new UserCacheClient();
+
+cacheClient.AddUser(userDTO);
+
+//cacheClient.AddUser(userDTO);
+
+//cacheClient.DeleteUser(1);

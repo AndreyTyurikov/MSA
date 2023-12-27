@@ -21,6 +21,7 @@
     <PackageReference Include="PD21.InventoryMs.Client" Version="1.0.1" />
     <PackageReference Include="PD21.InventoryMs.Contracts" Version="1.0.0" />
     <PackageReference Include="PD21.InventoryMs.Events" Version="1.0.1" />
+    <PackageReference Include="PD21.UserMs.RedisCacheClient" Version="1.0.0" />
     <PackageReference Include="RabbitMQ.Client" Version="6.6.0" />
     <PackageReference Include="UserMS.Client" Version="1.0.0" />
     <PackageReference Include="UserMS.DTO" Version="1.0.0" />

@@ -9,17 +9,24 @@ using InvoiceMS.Infrastructure.DataLayer;
 using Mapster;
 using System.Collections.Generic;
 using InvoiceMS.Infrastructure.EventProcessors;
+using UserMS.CacheClient;
 
 namespace InvoiceMS.Infrastructure.Services
 {
     public class InvoiceService : IInvoiceService, IInventoryUpdateNotificationsProcessor
     {
         private readonly IUserMsClient _userMsClient;
+        private readonly IUserMsCacheClient _userMsCacheClient;
         private readonly IInventoryMSClient _inventoryMSClient;
         private readonly IInvoiceDataLayer _invoiceDataLayer;
 
-        public InvoiceService(IUserMsClient userMsClient, IInvoiceDataLayer invoiceDataLayer) { 
+        public InvoiceService(
+            IUserMsClient userMsClient, 
+            IInvoiceDataLayer invoiceDataLayer,
+            IUserMsCacheClient userMsCacheClient
+            ) { 
             _userMsClient = userMsClient;
+            _userMsCacheClient = userMsCacheClient;
             _inventoryMSClient = InventoryMsClient.Client;
             _invoiceDataLayer = invoiceDataLayer;
         }
@@ -27,8 +34,8 @@ namespace InvoiceMS.Infrastructure.Services
         public async Task<InvoiceDTO> AddInvoice(AddInvoiceDTO addInvoiceDto)
         {
             InvoiceDTO addedInvoiceDTO = new InvoiceDTO();
-            
-            UserDTO userByID = await _userMsClient.GetUserByID(addInvoiceDto.UserId);
+
+            UserDTO userByID = await GetUserById(addInvoiceDto.UserId);
 
             //Check whether user exists and invoice has items
             if (userByID.Id > 0 && addInvoiceDto.InvoiceEntries.Length > 0) 
@@ -78,6 +85,18 @@ namespace InvoiceMS.Infrastructure.Services
             }
 
             return addedInvoiceDTO;
+        }
+
+        private async Task<UserDTO> GetUserById(long userId)
+        {
+            //Cache first
+            UserDTO? userFromCache = _userMsCacheClient.GetUser(userId);
+
+            if (userFromCache != null) return userFromCache;
+
+            UserDTO userById = await _userMsClient.GetUserByID(userId);
+
+            return userById != null ? userById : new UserDTO();
         }
 
         public async Task<bool> DeleteInvoiceById(int id)
