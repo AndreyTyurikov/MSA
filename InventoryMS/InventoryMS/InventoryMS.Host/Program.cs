@@ -1,6 +1,7 @@
 using InventoryMS.Host.Domain.DataLayer;
 using InventoryMS.Host.MessageBroker;
 using InventoryMS.Host.Services;
+using System.Diagnostics;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,9 @@ builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddTransient<IInventoryDataLayer, InventoryDataLayer>();
 
 var app = builder.Build();
+
+CacheService cacheService = new CacheService();
+Task<bool> cachingTask = cacheService.PutInventoryToCache();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

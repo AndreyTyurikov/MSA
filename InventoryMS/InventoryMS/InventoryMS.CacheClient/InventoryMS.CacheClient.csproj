@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>PD21.InventoryMs.CacheClient</PackageId>
+    <Version>1.0.1</Version>
+    <Authors>AndriiTiurikov</Authors>
+    <Company>PD21</Company>
+    <Product>MSA</Product>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>    
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NRedisStack" Version="0.11.0" />
+    <PackageReference Include="PD21.InventoryMs.Contracts" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>

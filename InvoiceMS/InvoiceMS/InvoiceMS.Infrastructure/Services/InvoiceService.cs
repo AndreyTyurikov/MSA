@@ -10,6 +10,7 @@ using Mapster;
 using System.Collections.Generic;
 using InvoiceMS.Infrastructure.EventProcessors;
 using UserMS.CacheClient;
+using InventoryMS.CacheClient;
 
 namespace InvoiceMS.Infrastructure.Services
 {
@@ -17,16 +18,19 @@ namespace InvoiceMS.Infrastructure.Services
     {
         private readonly IUserMsClient _userMsClient;
         private readonly IUserMsCacheClient _userMsCacheClient;
+        private readonly IInventoryMsCacheClient _inventoryMsCacheClient;
         private readonly IInventoryMSClient _inventoryMSClient;
         private readonly IInvoiceDataLayer _invoiceDataLayer;
 
         public InvoiceService(
             IUserMsClient userMsClient, 
             IInvoiceDataLayer invoiceDataLayer,
-            IUserMsCacheClient userMsCacheClient
+            IUserMsCacheClient userMsCacheClient,
+            IInventoryMsCacheClient inventoryMsCacheClient
             ) { 
             _userMsClient = userMsClient;
             _userMsCacheClient = userMsCacheClient;
+            _inventoryMsCacheClient = inventoryMsCacheClient;
             _inventoryMSClient = InventoryMsClient.Client;
             _invoiceDataLayer = invoiceDataLayer;
         }
