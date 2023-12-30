@@ -11,7 +11,7 @@ namespace UserMS.CacheClient
 
         public UserMsCacheClient()
         {
-            _redisConnection = ConnectionMultiplexer.Connect("localhost");
+            _redisConnection = ConnectionMultiplexer.Connect("172.18.0.5");
             _redisDb = _redisConnection.GetDatabase(0);
         }
 
